@@ -34,13 +34,24 @@ const show = (req, res) => {
     res.format({
         json: () => {
             if (postRichiesta) {
-                res.json(postRichiesta);
+                const image_url = `http://${req.headers.host}/imgs/posts/${postRichiesta.image}`;
+
+                const image_download_url = `http://${req.headers.host}/posts/${slugPostRichiesta}/download`;
+
+                const postWithUrls = {
+                    ...postRichiesta,
+                    image_url: image_url,
+                    image_download_url: image_download_url
+                };
+                
+                res.json(postWithUrls);
             } else {
                 res.status(404).json({ error: "Post not found" });
             }
         }
     });
 };
+
 
 const create = (req, res) => {
     res.format({
