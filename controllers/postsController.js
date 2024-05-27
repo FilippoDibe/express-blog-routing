@@ -1,6 +1,7 @@
 const path = require("path");
 const fs = require("fs");
-let posts = require("../DB/db.js")
+
+let posts = require("../DB/db.js");
 
 
 const index = (req, res) => {
@@ -41,9 +42,34 @@ const show = (req, res) => {
     });
 };
 
+const create = (req, res) => {
+    res.format({
+        html: () => {
+            res.send('<h1>Nuovo post creato con successo!</h1>');
+        },
+        default: () => {
+            res.status(406).send('Not Acceptable');
+        }
+    });
+};
+
+const downloadImage = (req, res) => {
+    const slug = req.params.slug;
+    const encodedSlug = encodeURIComponent(slug);
+    const imagePath = path.join(__dirname, `../public/imgs/posts/${encodedSlug}.jpeg`);
+    if (fs.existsSync(imagePath)) {
+        res.download(imagePath);
+    } else {
+        res.status(404).send('Image not found.');
+    }
+};
+
+
+
 
 module.exports = {
     index, 
     show,
-  
+    create,
+    downloadImage
 }
